@@ -223,7 +223,7 @@ data Point = P Float Float
 class Point(val x: Float, val y: Float)
 ```
 
-##### Co-products
+##### Co-product, sum
 
 The co-product follows a similar proof to the product, but in the opposite category:
 
@@ -253,7 +253,9 @@ f (Right b) = b
 
 ## Functor
 
-### Definition
+### Regular functor
+
+#### Definition
 
 Let us take the example of two categories A and B.
 
@@ -267,6 +269,8 @@ A functor is mapping from A to B, such that:
 - Composable arrows much remain composable (`f` and `g` were composable, so `f'` and `g'` must be as well)
 
 Functors must map every object and every arrow, however they can map to a subset of the category they map to.
+
+In small categories, functors are regular functions on objects.
 
 ##### Faithful, full, constant, endofunctors and bifunctors
 
@@ -282,7 +286,7 @@ Functors must map every object and every arrow, however they can map to a subset
 - Functors can be composed.
 - The **Cat** category is the category in which arrows are functors, and objects are categories.
 
-### In Haskell
+#### In Haskell
 
 A functor in Haskell is a typeclass, and is implemented like so:
 ```haskell
@@ -299,17 +303,30 @@ instance Functor List where
   fmap f (Cons head tail) = Cons (f head) (fmap f tail)
 ```
 
-### Functoriality
+### Bifunctor
 
-Something is "functorial" if a functor can be defined for it.
+##### Product category, bifunctor
 
-The product and co-product are functorial.
-Because algebraic data types (ADTs) are built from products and co-products, and functors are composable, they are all functorial as well.
+For two categories `C` and `D`, we can define the category of pairs of `C` and `D`, called `C×D`.
+In `C×D`, objects are pairs of objects from `C` and `D`, and arrows are pairs of arrows from `C` and `D`.
+These objects and arrows follow category rules:
+- For category `C` with `c`, `c'` and `f: c -> c'`,
+- For category `D` with `d`, `d'` and `g: d -> d'`,
+- `C×D` has the objects `(c, d)` and `(c', d')`,
+- `C×D` has the arrow `(f, g)`
+- `C×D` has the identities `id_(c, d) = (id_c, id_d)`
 
-### Categorical product, monoidal categories
+We call the mapping from `C` and `D` to `C×D` a “categorical product” (since it creates a product category).
 
-Using the same definition as the product, but replacing objects by categories and arrows by functors, we define a product of categories.
+A bifunctor is a functor from a product category to another category (whereas a functor is written `C -> D`, a bifunctor is written `C×D -> E`).
 
-### Profunctor
+Therefore, the categorical product is the mapping from `C` and `D` to `C×D`, which could be written `(C) × (D) -> (C×D)`, and is a bifunctor.
 
-A profunctor is both a functor and a contra-functor.
+With a similar definition, we can show that the categorical sum is a bifunctor as well (although there is only one value, it is still a mapping from two types to another type).
+
+##### In Haskell
+
+```haskell
+class Bifunctor f where
+  bimap :: (a -> a') -> (b -> b') -> (f a b -> f a' b')
+```
