@@ -46,6 +46,10 @@ Other common examples are the Category of Sets (in which objects are sets and ar
 
 A category in which every arrow has an opposite arrow (for each `f :: a -> b`, there is a `f' :: b -> a`).
 
+##### Small and large categories
+
+If objects of a category form a set, then we call it a “small category”. Categories in which objects do not form a set are called “large categories”.
+
 ### Concrete Category
 
 A concrete category is a category in which objects are sets of objects, and arrows are sets of arrows on those sets' elements.
