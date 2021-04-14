@@ -324,6 +324,15 @@ Therefore, the categorical product is the mapping from `C` and `D` to `C×D`, wh
 
 With a similar definition, we can show that the categorical sum is a bifunctor as well (although there is only one value, it is still a mapping from two types to another type).
 
+##### Monoidal categories
+
+The categorical product has a 'neutral element': the terminal object.
+Because of this, the categorical product is a Monoidal category.
+
+Similarly, the categorical co-product is a Monoidal category with the initial object as a 'neutral element'.
+
+More generally, Monoidal categories have a tensor product (written ⨂), with a unit (written 1).
+
 ##### In Haskell
 
 ```haskell
