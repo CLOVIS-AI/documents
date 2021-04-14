@@ -395,3 +395,36 @@ Either (Const () a) (Identity a)
 ```
 
 This procedure of proving functors can be automated: `{-# LANGUAGE DeriveFunctor #-}`.
+
+### Profunctor
+
+##### Contravariant functor
+
+```haskell
+class Contravariant f where
+  contramap :: (b -> a) -> (f a -> f b)
+```
+
+A contravariant is a "negative container": it expects `a` instead of 'storing' it.
+
+##### Co-functor, profunctor
+
+The co-functor (functor in the opposite category) is usually named profunctor (for historical reasons).
+
+```haskell
+class Profunctor p where
+  dimap :: (a' -> a) -> (b -> b') -> p a b -> p a' b'
+```
+
+As an example, we can take a simple function type: `a -> b`. Function types are profunctors. The parameters we get are:
+
+- `f: a' -> a`
+- `g: b -> b'`
+- `h: a -> b`
+- We want to create `res: a' -> b'`
+
+We can easily find that `res = g ○ h ○ f`. This makes sense, because:
+
+- We first use `f` (a contravariant functor) to create an `a`,
+- We then use `h` to convert it to a `b`,
+- And finally we use `g` (a regular functor) to get a `b'`.
