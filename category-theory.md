@@ -349,3 +349,49 @@ instance Bifunctor (Either a b) where
   bimap fa fb (Left a) = fa a
   bimap fa fb (Right b) = fb b
 ```
+
+### Functoriality of Algebraic Data Types (ADTs)
+
+##### Demonstration in Haskell
+
+```haskell
+-- The simplest functor:
+-- It's a functor of a, but it disregards a
+-- It can be thought of as the container that is always empty
+data Const c a = Const c
+
+instance Functor (Const c) where
+  -- fmap :: (a -> b) -> Const c a -> Const c b
+  -- Because we don't 'store' any value, we can ignore the function f
+  fmap f (Const c) = Const c
+```
+
+```haskell
+-- The functor that stores 1 element
+data Identity a = Identity a
+
+instance Functor (Identity a) where
+  -- We can just apply f to the contents
+  fmap f (Identity a) = Identity (f a)
+```
+
+We now have a functor of size 0, a functor of size 1, a functorial product, and a functorial sum.
+Because ADTs are formed with those elements, and functors are composable, then all ADTs are functorial as well.
+
+For example, we can deconstruct our types into functors:
+```haskell
+-- Let's take the example of Maybe
+data Maybe a = Nothing | Just a
+
+-- This type is mathematically identical:
+Either () (Identity a)
+
+-- Because unit is a set of size 1, we can replace it with Const:
+Either (Const () a) (Identity a)
+
+-- Either is a bifunctor, and a functor,
+-- Const is a functor, Identity is a functor,
+-- functors are composable, so Maybe is a functor.
+```
+
+This procedure of proving functors can be automated: `{-# LANGUAGE DeriveFunctor #-}`.
