@@ -339,3 +339,13 @@ More generally, Monoidal categories have a tensor product (written ⨂), with a 
 class Bifunctor f where
   bimap :: (a -> a') -> (b -> b') -> (f a b -> f a' b')
 ```
+
+A good example of a Bifunctor is Either:
+
+```haskell
+data Either a b = Left a | Right b
+
+instance Bifunctor (Either a b) where
+  bimap fa fb (Left a) = fa a
+  bimap fa fb (Right b) = fb b
+```
