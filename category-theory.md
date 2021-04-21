@@ -251,7 +251,7 @@ f (Left i) = i > 0
 f (Right b) = b
 ```
 
-## Functor
+## Functors and Algebraic Data Types (ADTs)
 
 ### Regular functor
 
@@ -350,7 +350,7 @@ instance Bifunctor (Either a b) where
   bimap fa fb (Right b) = fb b
 ```
 
-### Functoriality of Algebraic Data Types (ADTs)
+### Functoriality of ADTs
 
 ##### Demonstration in Haskell
 
@@ -428,3 +428,43 @@ We can easily find that `res = g ○ h ○ f`. This makes sense, because:
 - We first use `f` (a contravariant functor) to create an `a`,
 - We then use `h` to convert it to a `b`,
 - And finally we use `g` (a regular functor) to get a `b'`.
+
+### Function object
+
+##### Definition
+
+A function can be seen as a morphism from the product (tuple) of the function name and its arguments, to its return type. Because of this, we will always define the product before we can define functions.
+
+This way, if we have an object `z` which represents a function object that expects a parameter `a` and returns `b`, then the function is written as the morphism `eval: z × a -> b`.
+
+By universal construction, if there are two functions `z` and `z'` from `a` to `b`, and there is a morphism `h: z' -> z`, then we define that `z` is a better candidate function object than `z'`. We now call the best candidate a "function object", and write it `a => b`.
+
+Hence, for any candidate `z'` of function object, we can define `eval': z' × a -> b`, which can be rewritten as `eval' = eval ○ (h × id_a)` (using the functioriality of the product). We see that `h` and `eval'` have a 1–1 relationship, which allows us to prove that these two writings are equivalent:
+
+- `h :: z' -> z`, or, as we've seen, `h :: z' -> (a => b)`
+- `eval' :: z' × a -> b`
+
+Because we know these two writings are equivalent, we can decide:
+
+- That it isn't important to use a different notation for function objects, so we allow ourselves to use the normal arrow and rewrite `h` as `h :: z' -> (a -> b)`.
+- We now have proved that an arrow of a single argument that maps to an arrow of a single argument that maps to a result (`f -> (g -> h)`) is equivalent to an arrow of two arguments that maps to a single result (`f × g -> h`); this is Curry's theorem.
+
+##### A function object is an exponential
+
+Let's take the example of a function `Bool -> Int`.
+
+- It can only have two return values; we can therefore encode it as the `Int` that is returned when `true`, and the `Int` returned when `false`: we can encode our function as a pair of two ints, `(Int, Int)`.
+- The type of this function can therefore be encoded as the set of all possible pairs of `Int`, which can be written `Int × Int`, or even `Int²`.
+- As we've seen when we defined the product, when we talk about types (or, in a general sense, categories), we can write `Unit` as 1, `Boolean` as 2, etc.
+- We can then rewrite `Int^2` as `Int^Boolean`.
+
+Thanks to curryfication, we can rewrite any function of multiple arguments to functions of single arguments that return functions, which means:
+
+- `(Int, Int) -> Boolean` can be rewritten as:
+- `Int -> Int -> Boolean` which can be rewritten as:
+- `Boolean^Int^Int`.
+
+We call categories that support function objects "Cartesian-close categories".
+
+- For any pair of objects `a` and `b`, they have an exponential `a^b`,
+- They have a terminal object (`a¹` is `a`, `a²` is a pair of `a`, `a⁰` is the terminal object).
