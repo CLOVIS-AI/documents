@@ -98,3 +98,19 @@ When you request changes, add the label `merge::developper`.
 Your comments should be clear as to what the issue is. If a problem happens many times (for example, the coding style), create a single comment for the whole file.
 
 Do not bother with things that can be automated (pipeline failure, coding style…), these are the developer's responsibility.
+
+## Utilities
+
+The following links can give you a personal dashboard of what needs to be done; replace `<username>` by your username.
+
+My todo list:
+`https://gitlab.com/dashboard/todos`
+
+Issues I should start working on:
+`https://gitlab.com/dashboard/issues?scope=all&utf8=%E2%9C%93&state=opened&assignee_username=<username>&not[label_name][]=issue%3A%3Areview&not[label_name][]=issue%3A%3Adoing`
+
+Merge requests I should be working on:
+`https://gitlab.com/dashboard/merge_requests?scope=all&utf8=%E2%9C%93&state=opened&assignee_username=<username>&not[label_name][]=merge%3A%3Areviewer`
+
+Merge requests I should be reviewing:
+`https://gitlab.com/dashboard/merge_requests?scope=all&utf8=%E2%9C%93&state=opened&reviewer_username=<username>&not[label_name][]=merge%3A%3Adeveloper&draft=no&not[label_name][]=issue%3A%3Asoon&not[label_name][]=issue%3A%3Adoing&not[label_name][]=issue%3A%3Areview`
