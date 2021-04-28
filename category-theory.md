@@ -468,3 +468,36 @@ We call categories that support function objects "Cartesian-close categories".
 
 - For any pair of objects `a` and `b`, they have an exponential `a^b`,
 - They have a terminal object (`a¹` is `a`, `a²` is a pair of `a`, `a⁰` is the terminal object).
+
+## Type Algebra
+
+In the previous chapters, we have seen that:
+
+- We can think of a type as the count of its elements (`Void` is 0, `Unit` is 1, `Boolean` is 2…)
+- We can define the sum of two types (unions)
+- We can define the product of two types (structures)
+- The sum and product follow the usual rules
+- We can combine all those rules to create more complex types, without losing features (functoriality)
+- We can define exponents (functions)
+
+In this chapter, we will expand on those ideas.
+
+##### Trying some math expressions
+
+In math, we have the expression `a^(b+c) = a^b × a^c`. In our algebra, we could write it `Either b c -> a`, which makes sense because `Either b c = (b -> a, c -> a)`.
+
+In math, we have the expression `(a^b)^c = a^(b × c)`. In our algebra, this corresponds to currying: `c -> (b -> a) ~~ (b, c) -> a`.
+
+In math, we have the expression `(a × b)^c = a^c × b^c`. In our algebra, we could write it `c -> (a, b) ~~ (c -> a, c -> b)`.
+
+##### Curry-Howard-Lombek isomorphism
+
+We have been able to define many constructs from algebra and categories so they are isomorphic. We can go a step further and add logic expressions. For that goal, we will consider a type with no values "logical false", and a type with values "logical and".
+
+| Algebra   | Categories   | Logic    |
+| --------- | ------------ | -------- |
+| `0`       | `Void`       | `False`  |
+| `1`       | `Unit`       | `True`   |
+| `a + b`   | `(a, b)`     | `a ∧ b`  |
+| `a × b`   | `Either a b` | `a ∨ b`  |
+| `b^a`     | `a -> b`     | `a => b` |
