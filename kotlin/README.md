@@ -11,3 +11,4 @@ This course will teach you the basics of programming, using Kotlin. By its end, 
 ## Table of contents
 
 - [0. Getting started](0-getting-started.md)
+- [1. Output and variables](1-variables.md)
