@@ -19,8 +19,8 @@ This guide is split into multiple levels. You should read all parts in order (at
 
 ##### Level 1. Basic knowledge
 
-- [1. Basic computer science concepts](1-basics.md), not written yet
-- [2. Commits, understanding the history](2-commits.md), not written yet
+- [1. Basic configuration](1-basics.md)
+- [2. Commits, understanding the history](2-commits.md)
 - [3. The Worktree](3-worktree.md), not written yet
 - [4. Going back to the past](4-going-to-the-past.md), not written yet
 
