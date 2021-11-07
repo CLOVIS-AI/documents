@@ -2,23 +2,121 @@
 
 This document takes inspiration from:
 
-- [The guidelines for GitLab itself](https://docs.gitlab.com/ee/development/code_review.html)
+- [GitLab code review guidelines](https://docs.gitlab.com/ee/development/code_review.html)
+- [GitLab value stream documentation](https://about.gitlab.com/solutions/value-stream-management/)
+- [GitLab issue triage](https://about.gitlab.com/handbook/engineering/quality/issue-triage/)
 
-## Labels
+## Issue tracking
 
-For issues:
+This document presents a conventions to organize projects. Following these conventions allow for easier project management.
 
-- Create labels `issue::soon` (backlog), `issue::doing` (currently working on it) and `issue::review` (a non-draft merge request exists).
-- Create labels that represent the different parts of the project (for example, `client`, `server`, `ui`…)
-- Create labels `merge::developer` and `merge::reviewer` for turn-based review.
+### DevOps
 
-## Milestones and iterations
+The development process looks like the following stages:
+
+- Issue: A task has been created, but it hasn't been scheduled yet (added to a board or a milestone)
+- Plan: A task has been scheduled, but no one has started working on it yet (stops when the issue is mentioned in a pushed commit)
+- Code: Someone is currently working on it (starts when the first issue is mentioned in a commit, stops when a non-draft merge request is created)
+- Test: The CI pipeline is checking the code
+- Review: The reviewers are checking the code
+- Staging: The CD pipeline is deploying the code
+
+More information can be found in the [GitLab documentation](https://docs.gitlab.com/ee/user/analytics/value_stream_analytics.html), in particular [details about the measurement of each stage](https://docs.gitlab.com/ee/user/analytics/value_stream_analytics.html).
+
+### Labels
+
+You should create labels for the different subprojects (eg. `server`, `client`, `ui`, etc). These will be project dependent. This section mentions group-wide labels that can be used across organizations and projects.
+
+General roles:
+
+- `issue::soon`: Implementation on this issue has started
+- `issue::review`: This issue has been implemented, and a merge request is currently being reviewed
+- `merge::assignee`: Turn-based review: the assignee should check the comments and act on them
+- `merge::reviewer`: Turn-based review: the reviewer·s should check the code and approve or further comment on it
+
+Priority (recommended color: #cc338b):
+
+- `priority::urgent`: Urgent, this needs to be done as soon as possible (stops the project from working at all, security issues…)
+- `priority::high`: High, this must be done soon
+- `priority::medium`: Normal, this will be done when nothing more important is waiting
+- `priority::low`: Low, this will be done at some point in the future
+
+Problem:
+
+- `bug`: Something isn't behaving as expected
+- `incident`: The service is unavailable (server down…)
+
+Severity of bugs/incidents:
+
+- `severity::critical`: The project is unusable until this is fixed
+- `severity::major`: Some required features are broken
+- `severity::moderate`: Some important features are broken
+- `severity::minor`: Some features are inconvenient to use
+- `severity::cosmetic`: Something is not explained correctly / doesn't display correctly, but it has no impact on usage
+
+### Insights
+
+Add this file to your repository for GitLab to generate the different graphs based on the labels listed above.
+
+```yml
+# .gitlab/insights.yml
+
+issues:
+  title: "Issues and bugs"
+  charts:
+    - title: "Priority of new issues (monthly)"
+      description: "Issues created per month"
+      type: stacked-bar
+      query:
+        issuable_type: issue
+        issuable_state: opened
+        group_by: month
+        period_limit: 24
+        collection_labels:
+          - priority::urgent
+          - priority::high
+          - priority::medium
+          - priority::low
+    - title: "Priority of new bugs (monthly)"
+      description: "Bugs created per month, by priority"
+      type: stacked-bar
+      query:
+        issuable_type: issue
+        issuable_state: opened
+        group_by: month
+        period_limit: 24
+        filter_labels:
+          - bug
+        collection_labels:
+          - priority::urgent
+          - priority::high
+          - priority::medium
+          - priority::low
+    - title: "Monthly new bugs"
+      description: "Bugs created per month, by severity"
+      type: stacked-bar
+      query:
+        issuable_type: issue
+        issuable_state: opened
+        group_by: month
+        period_limit: 24
+        filter_labels:
+          - bug
+        collection_labels:
+          - severity::critical
+          - severity::major
+          - severity::moderate
+          - severity::minor
+          - severity::cosmetic
+```
+
+### Milestones and iterations
 
 Use milestones to represent 'objectives' or 'versions'. Use iterations (if available) to represent 'sprints'. If iterations are unavailable, and the project doesn't have clear versions/goals, then milestones can be used as iterations.
 
 Always set a start and due date for milestones and iterations.
 
-## Requirements and issues
+### Requirements and issues
 
 **Requirements** represent things the client wants.
 **Issues** represent work that needs to be done by the team.
@@ -39,7 +137,7 @@ Issues that fix bugs:
 
 - Create a normal issue, as usual. No need for a requirement.
 
-### Requirement skeleton
+#### Requirement skeleton
 
 ```text
 Extension of REQ-XXX, …
@@ -50,7 +148,7 @@ Needed by: <type of user, if there are multiple types>
 <Description, as detailed as possible>
 ```
 
-### Issue skeleton
+#### Issue skeleton
 
 ```text
 <Description>
