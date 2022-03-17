@@ -69,6 +69,7 @@ $ gpg --receive-keys KEY_IDS
 # - Ubuntu: keyserver.ubuntu.com
 # - MIT: pgp.mit.edu
 # - OpenPGP: keys.openpgp.org
+# - Debian: hkp://keyring.debian.org
 # - SKS: pool.sks-keyservers.net (not maintained anymore)
 # Some of these are synchronized together.
 
