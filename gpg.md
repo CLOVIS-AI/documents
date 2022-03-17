@@ -211,3 +211,26 @@ $ git config --global commit.gpgsign true
 ```
 
 To create a signed tag, use `git tag -s`. You can then upload your public key to [GitLab](https://gitlab.com/-/profile/gpg_keys) or GitHub, which will add a 'verified' icon to your commits in the web interface.
+
+## Sub-keys
+
+When using multiple machines, you might not want to move your private key to all of them. To securely use GPG on multiple devices, you can create sub-keys. Sub-keys are linked to a master key, such that a file signed by the sub-key is also signed by the master key, and it's possible to move a private sub-key to a device which does not have the master key, or to expire sub-keys without expiring your master key. Of course, only the master key can be used to decrypt files encrypted for it. It is common to create a signing sub-key for other computers which you might work on, but don't want to import your master private key on.
+
+To create a sub-key:
+
+```shell
+$ gpg --edit-key MASTER_KEY_ID
+gpg> addkey  # then, select the options you want
+gpg> save
+```
+
+Move the sub-key to another device:
+
+```shell
+# On the master machine
+$ gpg --export-secret-subkeys SUBKEY_ID! >secret-subkey  # don't forget the '!'
+
+# On the other machine
+$ gpg --import secret-subkey
+$ gpg --edit-key SUBKEY_ID! passwd  # give it a different password than the master key's password
+```
